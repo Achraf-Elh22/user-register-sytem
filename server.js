@@ -19,8 +19,8 @@ app.listen(PORT, () => console.log(`App Running on port ${PORT}`));
 
 // TODO:
 //   _ Build the basic structure [*]
-//   _ Build the signUp & logIn Routes []
-//   _ Build the DB Schema []
+//   _ Build the structure of signUp & logIn Routes [*]
+//   _ Build the DB Schema [*]
 //   _ Build the signUp & logIn Routes Logic []
 //   _ Build the UI of SignUp & Login
 //   _ Set up JWT []
