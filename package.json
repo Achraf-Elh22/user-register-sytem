@@ -1,0 +1,22 @@
+{
+  "name": "user-register-system",
+  "version": "1.0.0",
+  "description": "Password authentication",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.10.4"
+  },
+  "devDependencies": {
+    "morgan": "^1.10.0",
+    "nodemon": "^2.0.4"
+  }
+}
