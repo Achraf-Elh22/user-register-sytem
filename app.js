@@ -7,6 +7,6 @@ const app = express();
 app.use(morgan('dev'));
 
 // routers
-// app.use('/', require('./router/userRouter'));
+app.use('/', require('./router/userRouter'));
 
 module.exports = app;
