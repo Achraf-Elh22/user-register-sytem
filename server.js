@@ -24,8 +24,8 @@ app.listen(PORT, () => console.log(`App Running on port ${PORT}`));
 //   _ Build the signUp Routes Logic [*]
 //   _ Add Validators to the Schema [*]
 //   _ Set up JWT [*]
-//   _ Send the Token as cookies []
-//   _ Login []
+//   _ Send the Token as cookies [*]
+//   _ Login [*]
 //   _ Protect the dashboard [*]
-//   _ FEATURE: reset password
+//   _ FEATURE: reset password []
 //   _ Do research on who to make this app more secure[]

@@ -30,7 +30,7 @@ router.post('/register', async (req, res) => {
         });
       // Create Token
       let token = jwt.sign({ id: user.id }, process.env.TOKEN_SECRET_KEY, {
-        expiresIn: '30s',
+        expiresIn: '10d',
       });
       res.cookie('token', token, { httpOnly: true });
       res.status(200).json({
@@ -46,7 +46,38 @@ router.post('/register', async (req, res) => {
 
 // @ dec Login page
 // GET /login
-// router.get('/login', (req, res) => {});
+router.post('/login', async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    const user = await User.findOne({ email });
+    if (!user) {
+      throw Error('Incorrect email or password');
+    }
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+      throw Error('Incorrect email or password');
+    }
+
+    // Create Token
+    let token = jwt.sign({ id: user.id }, process.env.TOKEN_SECRET_KEY, {
+      expiresIn: '10d',
+    });
+
+    res.cookie('token', token, { httpOnly: true });
+    res.status(200).json({
+      status: 'success',
+      auth: true,
+      token,
+    });
+  } catch (err) {
+    console.error('💣💣💣', err.message);
+    return res.status(500).json({
+      status: 'error',
+      message: err.message,
+    });
+  }
+});
 
 // @ dec Dasboard page
 // GET /dasboard
