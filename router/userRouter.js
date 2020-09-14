@@ -32,6 +32,7 @@ router.post('/register', async (req, res) => {
       let token = jwt.sign({ id: user.id }, process.env.TOKEN_SECRET_KEY, {
         expiresIn: '30s',
       });
+      res.cookie('token', token, { httpOnly: true });
       res.status(200).json({
         status: 'success',
         auth: true,
@@ -51,15 +52,14 @@ router.post('/register', async (req, res) => {
 // GET /dasboard
 router.get('/dashboard', async (req, res) => {
   try {
-    const header = req.headers['authorization'];
-    if (!header)
+    const token = req.cookies.token;
+    if (!token)
       return res.status(401).json({
         status: 'error',
         auth: false,
         message: 'Anauthorized, Please /login',
       });
 
-    const token = header.split(' ')[1];
     await jwt.verify(
       token,
       process.env.TOKEN_SECRET_KEY,
