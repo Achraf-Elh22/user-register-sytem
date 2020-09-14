@@ -45,7 +45,7 @@ router.post('/register', async (req, res) => {
 });
 
 // @ dec Login page
-// GET /login
+// POST /login
 router.post('/login', async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -108,6 +108,13 @@ router.get('/dashboard', async (req, res) => {
   } catch (err) {
     console.error('💣💣💣', err.message);
   }
+});
+
+// @ dec Logout page
+// GET /Logout
+router.get('/logout', (req, res) => {
+  res.cookie('token', '');
+  res.status(200).json({ status: 'success', token: null });
 });
 
 module.exports = router;

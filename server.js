@@ -27,5 +27,6 @@ app.listen(PORT, () => console.log(`App Running on port ${PORT}`));
 //   _ Send the Token as cookies [*]
 //   _ Login [*]
 //   _ Protect the dashboard [*]
+//   _ Logout [*]
 //   _ FEATURE: reset password []
 //   _ Do research on who to make this app more secure[]
