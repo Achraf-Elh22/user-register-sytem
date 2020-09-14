@@ -1,6 +1,7 @@
 const express = require('express');
 const User = require('../models/user');
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
 const router = express.Router();
 
@@ -28,20 +29,54 @@ router.post('/register', async (req, res) => {
           message: err.message,
         });
       // Create Token
+      let token = jwt.sign({ id: user.id }, process.env.TOKEN_SECRET_KEY, {
+        expiresIn: '30s',
+      });
       res.status(200).json({
         status: 'success',
         auth: true,
-        token: '',
+        token,
       });
     });
   } catch (err) {
     console.error('💣💣💣', err.message);
   }
-  // res.json({ message: 'success' });
 });
 
 // @ dec Login page
 // GET /login
 // router.get('/login', (req, res) => {});
+
+// @ dec Dasboard page
+// GET /dasboard
+router.get('/dashboard', async (req, res) => {
+  try {
+    const header = req.headers['authorization'];
+    if (!header)
+      return res.status(401).json({
+        status: 'error',
+        auth: false,
+        message: 'Anauthorized, Please /login',
+      });
+
+    const token = header.split(' ')[1];
+    await jwt.verify(
+      token,
+      process.env.TOKEN_SECRET_KEY,
+      async (err, decode) => {
+        if (err)
+          return res.status(500).json({
+            auth: false,
+            message: `Failed to authenticate token, ${err.message}`,
+          });
+        console.log(decode.id);
+        const user = await await User.findById(decode.id, { password: 0 });
+        return res.status(200).json({ status: 'success', auth: true, user });
+      }
+    );
+  } catch (err) {
+    console.error('💣💣💣', err.message);
+  }
+});
 
 module.exports = router;

@@ -23,11 +23,9 @@ app.listen(PORT, () => console.log(`App Running on port ${PORT}`));
 //   _ Build the DB Schema [*]
 //   _ Build the signUp Routes Logic [*]
 //   _ Add Validators to the Schema [*]
-//   _ Build the UI of SignUp & Login
-//   _ Set up JWT []
+//   _ Set up JWT [*]
 //   _ Send the Token as cookies []
-//   _ Build the Dashboard []
-//   _ Protect the dashboard []
 //   _ Login []
+//   _ Protect the dashboard []
 //   _ FEATURE: reset password
 //   _ Do research on who to make this app more secure[]
