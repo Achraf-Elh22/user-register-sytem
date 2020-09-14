@@ -6,6 +6,9 @@ const app = express();
 // Logging
 app.use(morgan('dev'));
 
+// MIDDLEWEARES
+app.use(express.json());
+
 // routers
 app.use('/', require('./router/userRouter'));
 

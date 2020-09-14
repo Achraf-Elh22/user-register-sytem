@@ -6,7 +6,7 @@ const userSchema = new mongoose.Schema({
     required: true,
     trim: true,
   },
-  username: {
+  userName: {
     type: String,
     required: true,
     trim: true,
@@ -15,9 +15,8 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  photo: { type: String },
 });
 
-const User = mongoose.Model('User', userSchema);
+const User = mongoose.model('User', userSchema);
 
 module.exports = User;
