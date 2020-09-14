@@ -12,8 +12,11 @@ router.post('/register', async (req, res) => {
 
     // Check if the User exist
     const user = await User.findOne({ email });
+
     if (user) {
-      throw new Error('This User is all ready exist!');
+      return res
+        .status(400)
+        .json({ status: 'error', message: 'This User is all ready exist!' });
     }
 
     const hash = await bcrypt.hash(password, 10);
@@ -22,7 +25,7 @@ router.post('/register', async (req, res) => {
       if (err)
         return res.status(500).json({
           status: 'error',
-          message: 'There was a problem registering the user.',
+          message: err.message,
         });
       // Create Token
       res.status(200).json({
