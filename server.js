@@ -28,5 +28,6 @@ app.listen(PORT, () => console.log(`App Running on port ${PORT}`));
 //   _ Login [*]
 //   _ Protect the dashboard [*]
 //   _ Logout [*]
+//   _ refactore JWT sign [*]
 //   _ FEATURE: reset password []
 //   _ Do research on who to make this app more secure[]

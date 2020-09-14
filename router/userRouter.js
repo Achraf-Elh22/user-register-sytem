@@ -5,6 +5,9 @@ const jwt = require('jsonwebtoken');
 
 const router = express.Router();
 
+const signIn = (id) =>
+  jwt.sign({ id }, process.env.TOKEN_SECRET_KEY, { expiresIn: '10d' });
+
 // @ dec signUp page
 // POST /signup
 router.post('/register', async (req, res) => {
@@ -29,9 +32,7 @@ router.post('/register', async (req, res) => {
           message: err.message,
         });
       // Create Token
-      let token = jwt.sign({ id: user.id }, process.env.TOKEN_SECRET_KEY, {
-        expiresIn: '10d',
-      });
+      let token = signIn(user.id);
       res.cookie('token', token, { httpOnly: true });
       res.status(200).json({
         status: 'success',
@@ -60,9 +61,7 @@ router.post('/login', async (req, res) => {
     }
 
     // Create Token
-    let token = jwt.sign({ id: user.id }, process.env.TOKEN_SECRET_KEY, {
-      expiresIn: '10d',
-    });
+    let token = signIn(user.id);
 
     res.cookie('token', token, { httpOnly: true });
     res.status(200).json({
@@ -113,7 +112,7 @@ router.get('/dashboard', async (req, res) => {
 // @ dec Logout page
 // GET /Logout
 router.get('/logout', (req, res) => {
-  res.cookie('token', '');
+  res.cookie('token', '', { httpOnly: true });
   res.status(200).json({ status: 'success', token: null });
 });
 
