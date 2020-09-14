@@ -8,6 +8,17 @@ const router = express.Router();
 const signIn = (id) =>
   jwt.sign({ id }, process.env.TOKEN_SECRET_KEY, { expiresIn: '10d' });
 
+// We could return this function to middleweare
+const verifyUser = async (token) => {
+  if (!token) throw new Error('Anauthorized, Please /login');
+  let userId;
+  await jwt.verify(token, process.env.TOKEN_SECRET_KEY, async (err, decode) => {
+    if (err) throw new Error(`Failed to authenticate token, ${err.message}`);
+    userId = decode.id;
+  });
+  return userId;
+};
+
 // @ dec signUp page
 // POST /signup
 router.post('/register', async (req, res) => {
@@ -82,30 +93,21 @@ router.post('/login', async (req, res) => {
 // GET /dasboard
 router.get('/dashboard', async (req, res) => {
   try {
-    const token = req.cookies.token;
-    if (!token)
-      return res.status(401).json({
-        status: 'error',
-        auth: false,
-        message: 'Anauthorized, Please /login',
-      });
-
-    await jwt.verify(
-      token,
-      process.env.TOKEN_SECRET_KEY,
-      async (err, decode) => {
-        if (err)
-          return res.status(500).json({
-            auth: false,
-            message: `Failed to authenticate token, ${err.message}`,
-          });
-        console.log(decode.id);
-        const user = await await User.findById(decode.id, { password: 0 });
-        return res.status(200).json({ status: 'success', auth: true, user });
-      }
-    );
+    const userId = await verifyUser(req.cookies.token);
+    const user = await User.findById(userId, { password: 0 });
+    console.log(user);
+    res.status(200).json({
+      status: 'success',
+      auth: true,
+      user,
+    });
   } catch (err) {
     console.error('💣💣💣', err.message);
+    res.status(401).json({
+      status: 'Error',
+      auth: false,
+      error: err.message,
+    });
   }
 });
 
@@ -114,6 +116,35 @@ router.get('/dashboard', async (req, res) => {
 router.get('/logout', (req, res) => {
   res.cookie('token', '', { httpOnly: true });
   res.status(200).json({ status: 'success', token: null });
+});
+
+// @ dec reset Password page
+// GET /resetPassword
+router.post('/resetPassword', async (req, res) => {
+  try {
+    const userId = await verifyUser(req.cookies.token);
+    const user = await User.findById(userId);
+    const { currentPassword, newPassword } = req.body;
+    const isPasswordCorrect = await bcrypt.compare(
+      currentPassword,
+      user.password
+    );
+    if (!isPasswordCorrect)
+      throw new Error('The current passowrd is incorrect');
+    const hash = await bcrypt.hash(newPassword, 10);
+
+    await User.findByIdAndUpdate(user.id, { password: hash });
+
+    const newToken = signIn(user.id);
+    res.status(200).json({ status: 'success', auth: true, newToken });
+  } catch (err) {
+    console.error('💣💣💣', err.message);
+    res.status(401).json({
+      status: 'Error',
+      auth: false,
+      error: err.message,
+    });
+  }
 });
 
 module.exports = router;

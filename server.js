@@ -9,6 +9,7 @@ dotenv.config({ path: 'config.env' });
 // Connect to DB
 mongoose
   .connect(process.env.MONGO_URI, {
+    useFindAndModify: false,
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
